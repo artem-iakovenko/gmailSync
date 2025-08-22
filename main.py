@@ -6,8 +6,12 @@ import json
 from gdrive import GoogleDrive
 from datetime import datetime
 from dateutil.relativedelta import relativedelta
+from secret_manager import access_secret
+
 
 EMAILS = ['kira@kitrum.com']
+
+gmail_accounts = json.loads(access_secret("kitrum-cloud", "teamGmailSecrets"))
 
 
 def main():
@@ -24,7 +28,6 @@ def main():
     print(len(gdrive_handler.drive_files), " files found in Shared Drive")
     bigquery_handler = BigQuery()
     query = "SELECT email, tokens FROM `kitrum-cloud.gmail.credentials` where isValid = True"
-    gmail_accounts = bigquery_handler.get_from_bigquery(query)
 
     for account in gmail_accounts:
         account_email = account['email']

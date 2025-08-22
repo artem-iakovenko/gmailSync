@@ -1,11 +1,18 @@
 import time
 import os
 from google.cloud import bigquery
-os.environ['GOOGLE_APPLICATION_CREDENTIALS'] = 'tokens/bq/kitrum-cloud.json'
+from secret_manager import access_secret
+import json
+from google.oauth2 import service_account
+
+
+kitrum_bq_json = json.loads(access_secret("kitrum-cloud", "kitrum_bq"))
+credentials = service_account.Credentials.from_service_account_info(kitrum_bq_json)
 
 
 class BigQuery:
-    client = bigquery.Client()
+    bq_client = bigquery.Client(credentials=credentials, project=credentials.project_id)
+
 
     def insert_to_bigquery(self, messages_lists, table_id):
         for messages_list in messages_lists:

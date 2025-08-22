@@ -6,6 +6,10 @@ from google.oauth2.credentials import Credentials
 from googleapiclient.discovery import build
 from googleapiclient.http import MediaFileUpload
 from config import DRIVE_SCOPES
+from secret_manager import access_secret
+import json
+
+drive_json = json.loads(access_secret("kitrum-cloud", "google_drive_artem"))
 
 
 class GoogleDrive:
@@ -18,7 +22,7 @@ class GoogleDrive:
 
     def get_service(self):
         if not self.creds or not self.creds.valid:
-            self.creds = Credentials.from_authorized_user_file("tokens/gdrive/token.json", DRIVE_SCOPES)
+            self.creds = Credentials.from_authorized_user_info(drive_json, DRIVE_SCOPES)
             self.creds.refresh(Request())
             self.service = build("drive", "v3", credentials=self.creds)
 
