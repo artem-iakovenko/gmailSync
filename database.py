@@ -11,7 +11,8 @@ credentials = service_account.Credentials.from_service_account_info(kitrum_bq_js
 
 
 class BigQuery:
-    bq_client = bigquery.Client(credentials=credentials, project=credentials.project_id)
+    def __init__(self):
+        self.client = bigquery.Client(credentials=credentials, project=credentials.project_id)
 
 
     def insert_to_bigquery(self, messages_lists, table_id):
